@@ -25,6 +25,10 @@ Public Class MainWindow
                     Else
                         If JSONObject(subkey).ToString = "race" Then
                             SubList.Add(key_last_list(subindex), "種族")
+                        ElseIf JSONObject(subkey).ToString = "add" Then
+                            SubList.Add(key_last_list(subindex), "他スキル")
+                        ElseIf JSONObject(subkey).ToString = "general" Then
+                            SubList.Add(key_last_list(subindex), "一般")
                         Else
                             SubList.Add(key_last_list(subindex), JSONObject(subkey).ToString)
                         End If
