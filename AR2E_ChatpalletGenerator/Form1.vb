@@ -80,7 +80,9 @@ Public Class MainWindow
         End If
 
         SkillChat = $"◆{SkillData("Timing")}◆《{SkillData("Name")}》{SkillData("Lv")}：{Category}/{SkillData("Note")}{Roll}{Target}{Range}{Cost}{Reqd}"
-
+        If SkillData("Cost") <> "―" Then
+            SkillChat = SkillChat & $"{vbCrLf}:MP-{SkillData("Cost")}@{SkillData("Name")}"
+        End If
         Return SkillChat
     End Function
 
