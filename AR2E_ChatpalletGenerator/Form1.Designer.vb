@@ -22,67 +22,61 @@ Partial Class MainWindow
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Me.Button1 = New System.Windows.Forms.Button()
-
-        Me.DataGridView1 = New System.Windows.Forms.DataGridView()
-        Me.RichTextBox1 = New System.Windows.Forms.RichTextBox()
-        Me.CheckBox1 = New System.Windows.Forms.CheckBox()
-        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
-
-        Me.SuspendLayout()
-        '
-        'Button1
-        '
-        Me.Button1.Location = New System.Drawing.Point(25, 94)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(76, 48)
-        Me.Button1.TabIndex = 0
-        Me.Button1.Text = "開く"
-        Me.Button1.UseVisualStyleBackColor = True
-        '
-        'RichTextBox1
-        '
-        Me.RichTextBox1.Location = New System.Drawing.Point(409, 12)
-        Me.RichTextBox1.Name = "RichTextBox1"
-        Me.RichTextBox1.ReadOnly = True
-        Me.RichTextBox1.Size = New System.Drawing.Size(370, 426)
-        Me.RichTextBox1.TabIndex = 1
-        Me.RichTextBox1.Text = ""
-        '
-        'RichTextBox1
-        '
-        Me.RichTextBox1.Location = New System.Drawing.Point(35, 280)
-        Me.RichTextBox1.Name = "RichTextBox1"
-        Me.RichTextBox1.Size = New System.Drawing.Size(100, 96)
-        Me.RichTextBox1.TabIndex = 3
-        Me.RichTextBox1.Text = ""
-        '
-        'CheckBox1
-        '
-        Me.CheckBox1.AutoSize = True
-        Me.CheckBox1.Location = New System.Drawing.Point(35, 195)
-        Me.CheckBox1.Name = "CheckBox1"
-        Me.CheckBox1.Size = New System.Drawing.Size(124, 19)
-        Me.CheckBox1.TabIndex = 4
-        Me.CheckBox1.Text = "パッシブを出力しない"
-        Me.CheckBox1.UseVisualStyleBackColor = True
-        '
-        'MainWindow
-        '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(800, 450)
-
-        Me.Controls.Add(Me.CheckBox1)
-        Me.Controls.Add(Me.RichTextBox1)
-        Me.Controls.Add(Me.DataGridView1)
-
-        Me.Controls.Add(Me.Button1)
-        Me.Name = "MainWindow"
-        Me.Text = "AR2Eチャットパレットジェネレーター"
-        Me.ResumeLayout(False)
-        Me.PerformLayout()
-
+        Button1 = New Button()
+        DataGridView1 = New DataGridView()
+        RichTextBox1 = New RichTextBox()
+        CheckBox1 = New CheckBox()
+        CType(DataGridView1, ComponentModel.ISupportInitialize).BeginInit()
+        SuspendLayout()
+        ' 
+        ' Button1
+        ' 
+        Button1.Location = New Point(25, 94)
+        Button1.Name = "Button1"
+        Button1.Size = New Size(76, 48)
+        Button1.TabIndex = 0
+        Button1.Text = "開く"
+        Button1.UseVisualStyleBackColor = True
+        ' 
+        ' DataGridView1
+        ' 
+        DataGridView1.Location = New Point(201, 5)
+        DataGridView1.Name = "DataGridView1"
+        DataGridView1.Size = New Size(597, 442)
+        DataGridView1.TabIndex = 5
+        ' 
+        ' RichTextBox1
+        ' 
+        RichTextBox1.Location = New Point(35, 280)
+        RichTextBox1.Name = "RichTextBox1"
+        RichTextBox1.ReadOnly = True
+        RichTextBox1.Size = New Size(100, 96)
+        RichTextBox1.TabIndex = 3
+        RichTextBox1.Text = ""' 
+        ' CheckBox1
+        ' 
+        CheckBox1.AutoSize = True
+        CheckBox1.Location = New Point(35, 195)
+        CheckBox1.Name = "CheckBox1"
+        CheckBox1.Size = New Size(124, 19)
+        CheckBox1.TabIndex = 4
+        CheckBox1.Text = "パッシブを出力しない"
+        CheckBox1.UseVisualStyleBackColor = True
+        ' 
+        ' MainWindow
+        ' 
+        AutoScaleDimensions = New SizeF(7F, 15F)
+        AutoScaleMode = AutoScaleMode.Font
+        ClientSize = New Size(800, 450)
+        Controls.Add(CheckBox1)
+        Controls.Add(RichTextBox1)
+        Controls.Add(DataGridView1)
+        Controls.Add(Button1)
+        Name = "MainWindow"
+        Text = "AR2Eチャットパレットジェネレーター"
+        CType(DataGridView1, ComponentModel.ISupportInitialize).EndInit()
+        ResumeLayout(False)
+        PerformLayout()
     End Sub
 
     Friend WithEvents Button1 As Button
