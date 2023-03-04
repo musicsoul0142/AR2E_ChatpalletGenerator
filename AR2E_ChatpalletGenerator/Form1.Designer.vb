@@ -52,7 +52,7 @@ Partial Class MainWindow
         RichTextBox1.ReadOnly = True
         RichTextBox1.Size = New Size(100, 96)
         RichTextBox1.TabIndex = 3
-        RichTextBox1.Text = ""' 
+        RichTextBox1.Text = "" ' 
         ' CheckBox1
         ' 
         CheckBox1.AutoSize = True
@@ -65,7 +65,7 @@ Partial Class MainWindow
         ' 
         ' MainWindow
         ' 
-        AutoScaleDimensions = New SizeF(7F, 15F)
+        AutoScaleDimensions = New SizeF(7.0F, 15.0F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(800, 450)
         Controls.Add(CheckBox1)
