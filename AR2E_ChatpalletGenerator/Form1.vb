@@ -29,6 +29,14 @@ Public Class MainWindow
                             SubList.Add(key_last_list(subindex), "他スキル")
                         ElseIf JSONObject(subkey).ToString = "general" Then
                             SubList.Add(key_last_list(subindex), "一般")
+                        ElseIf JSONObject(subkey).ToString = "power" Then
+                            SubList.Add(key_last_list(subindex), "パワー（共通）")
+                        ElseIf JSONObject(subkey).ToString = "another" Then
+                            SubList.Add(key_last_list(subindex), "異才")
+                        ElseIf JSONObject(subkey).ToString = "style" Then
+                            SubList.Add(key_last_list(subindex), "流派")
+                        ElseIf JSONObject(subkey).ToString = "geis" Then
+                            SubList.Add(key_last_list(subindex), "誓約")
                         Else
                             SubList.Add(key_last_list(subindex), JSONObject(subkey).ToString)
                         End If
@@ -116,12 +124,15 @@ Public Class MainWindow
 
             SkillList = Data_Load(loop_type, key_first, key_last_list, default_value, JsonObject)
 
-            'RichTextBox1.Text = ""
+            RichTextBox1.Text = ""
 
-            'For index = 1 To SkillList.Count
-            '    Dim test_text As String = Generate_ChatPallet(SkillList(index))
-            '    RichTextBox1.AppendText($"{test_text}{vbCrLf}")
-            'Next
+            For index = 1 To SkillList.Count
+                If (SkillList(index)("Timing") = "パッシブ" Or SkillList(index)("Timing") = "パッシブ／メイキング") And CheckBox1.Checked = True Then
+                    Continue For
+                End If
+                Dim test_text As String = Generate_ChatPallet(SkillList(index))
+                RichTextBox1.AppendText($"{test_text}{vbCrLf}")
+            Next
             For index = 1 To SkillList.Count
                 DataGridView1.Rows.Add()
                 DataGridView1.Rows(index - 1).Cells(0).Value = SkillList(index)("Type")
