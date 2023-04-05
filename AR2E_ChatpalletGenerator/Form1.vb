@@ -3,6 +3,7 @@ Imports System.IO
 Imports Newtonsoft.Json
 
 Public Class MainWindow
+    Private SkillList As Object
 
     Function Data_Load(loop_type, key_first, key_last_list, default_value, JSONObject)
         Dim List As New Dictionary(Of Object, Dictionary(Of String, String))
@@ -108,7 +109,6 @@ Public Class MainWindow
 
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        Dim SkillList As Object
         Dim rawstr As String
 
         Dim ofdJSON As New OpenFileDialog()
@@ -132,22 +132,9 @@ Public Class MainWindow
 
             SkillList = Data_Load(loop_type, key_first, key_last_list, default_value, JsonObject)
 
-            RichTextBox1.Text = ""
-
             For index = 1 To SkillList.Count
-                If (SkillList(index)("Timing") = "パッシブ" Or SkillList(index)("Timing") = "パッシブ／メイキング") And CheckBox1.Checked = True Then
-                    Continue For
-                End If
-                Dim test_text As String = Generate_ChatPallet(SkillList(index))
-                RichTextBox1.AppendText($"{test_text}{vbCrLf}")
-            Next
-            For index = 1 To SkillList.Count
-                DataGridView1.Rows.Add()
-
-                If (SkillList(index)("Timing") = "パッシブ" Or SkillList(index)("Timing") = "パッシブ／メイキング") And CheckBox1.Checked = True Then
-                    DataGridView1.Rows(index - 1).Cells(0).Value = False
-                Else
-                    DataGridView1.Rows(index - 1).Cells(0).Value = True
+                If index < SkillList.Count Then
+                    DataGridView1.Rows.Add()
                 End If
 
                 DataGridView1.Rows(index - 1).Cells(1).Value = index
@@ -162,7 +149,6 @@ Public Class MainWindow
                 DataGridView1.Rows(index - 1).Cells(10).Value = SkillList(index)("Range")
                 DataGridView1.Rows(index - 1).Cells(11).Value = SkillList(index)("Cost")
                 DataGridView1.Rows(index - 1).Cells(12).Value = SkillList(index)("Reqd")
-
 
             Next
 
@@ -196,6 +182,18 @@ Public Class MainWindow
     End Sub
 
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        'チャパレ生成
+        RichTextBox1.Text = ""
 
+        For index = 0 To DataGridView1.RowCount
+            If 1 = 1 Then
+                Continue For
+            End If
+            Dim test_text As String = Generate_ChatPallet(SkillList(index))
+            RichTextBox1.AppendText($"{test_text}{vbCrLf}")
+        Next
+        'チャパレ生成ここまで
     End Sub
+
+
 End Class
