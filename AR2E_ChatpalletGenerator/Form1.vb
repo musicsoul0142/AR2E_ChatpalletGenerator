@@ -186,8 +186,8 @@ Public Class MainWindow
         'チャパレ生成
         RichTextBox1.Text = ""
 
-        For index = 0 To DataGridView1.RowCount
-            If 1 = 1 Then
+        For index = 1 To DataGridView1.RowCount
+            If DataGridView1.Rows(index - 1).Cells(0).Value = False Then
                 Continue For
             End If
             Dim test_text As String = Generate_ChatPallet(SkillList(index))
