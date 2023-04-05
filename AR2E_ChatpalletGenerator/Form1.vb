@@ -4,7 +4,7 @@ Imports Newtonsoft.Json
 
 Public Class MainWindow
     Private SkillList As Object
-
+    Private Passiveflag As Boolean = True
     Function Data_Load(loop_type, key_first, key_last_list, default_value, JSONObject)
         Dim List As New Dictionary(Of Object, Dictionary(Of String, String))
 
@@ -137,6 +137,7 @@ Public Class MainWindow
                     DataGridView1.Rows.Add()
                 End If
 
+                DataGridView1.Rows(index - 1).Cells(0).Value = True
                 DataGridView1.Rows(index - 1).Cells(1).Value = index
                 DataGridView1.Rows(index - 1).Cells(2).Value = SkillList(index)("Type")
                 DataGridView1.Rows(index - 1).Cells(3).Value = SkillList(index)("Category")
@@ -195,5 +196,23 @@ Public Class MainWindow
         'チャパレ生成ここまで
     End Sub
 
+    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+        'パッシブチェックオンオフボタン
+        If Passiveflag = True Then
+            For index = 0 To DataGridView1.RowCount - 1
+                If DataGridView1.Rows(index).Cells(6).Value = "パッシブ" Or DataGridView1.Rows(index).Cells(6).Value = "パッシブ／メイキング" Then
+                    DataGridView1.Rows(index).Cells(0).Value = False
+                End If
+            Next
+            Passiveflag = False
+        Else
+            For index = 0 To DataGridView1.RowCount - 1
+                If DataGridView1.Rows(index).Cells(6).Value = "パッシブ" Or DataGridView1.Rows(index).Cells(6).Value = "パッシブ／メイキング" Then
+                    DataGridView1.Rows(index).Cells(0).Value = True
+                End If
+            Next
+            Passiveflag = True
+        End If
 
+    End Sub
 End Class
