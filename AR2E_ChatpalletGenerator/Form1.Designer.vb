@@ -27,6 +27,7 @@ Partial Class MainWindow
         RichTextBox1 = New RichTextBox()
         Button2 = New Button()
         Button3 = New Button()
+        Button4 = New Button()
         CType(DataGridView1, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
         ' 
@@ -58,7 +59,7 @@ Partial Class MainWindow
         RichTextBox1.Text = ""' 
         ' Button2
         ' 
-        Button2.Location = New Point(75, 226)
+        Button2.Location = New Point(12, 226)
         Button2.Name = "Button2"
         Button2.Size = New Size(76, 48)
         Button2.TabIndex = 5
@@ -74,11 +75,21 @@ Partial Class MainWindow
         Button3.Text = "パッシブを一括ONOFF"
         Button3.UseVisualStyleBackColor = True
         ' 
+        ' Button4
+        ' 
+        Button4.Location = New Point(133, 226)
+        Button4.Name = "Button4"
+        Button4.Size = New Size(85, 48)
+        Button4.TabIndex = 7
+        Button4.Text = "クリップボードにコピー"
+        Button4.UseVisualStyleBackColor = True
+        ' 
         ' MainWindow
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(800, 450)
+        Controls.Add(Button4)
         Controls.Add(Button3)
         Controls.Add(Button2)
         Controls.Add(RichTextBox1)
@@ -95,4 +106,5 @@ Partial Class MainWindow
     Friend WithEvents RichTextBox1 As RichTextBox
     Friend WithEvents Button2 As Button
     Friend WithEvents Button3 As Button
+    Friend WithEvents Button4 As Button
 End Class
