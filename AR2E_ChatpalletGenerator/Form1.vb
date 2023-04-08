@@ -217,6 +217,10 @@ Public Class MainWindow
     End Sub
 
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
-        Clipboard.SetText(RichTextBox1.Text)
+        Try
+            Clipboard.SetText(RichTextBox1.Text)
+        Catch ex As System.ArgumentNullException
+            Return
+        End Try
     End Sub
 End Class
