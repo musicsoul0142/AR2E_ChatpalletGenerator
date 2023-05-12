@@ -42,6 +42,8 @@ Partial Class MainWindow
         ' 
         ' DataGridView1
         ' 
+        DataGridView1.AllowUserToAddRows = False
+        DataGridView1.AllowUserToDeleteRows = False
         DataGridView1.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
         DataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         DataGridView1.Location = New Point(232, 12)
@@ -56,7 +58,8 @@ Partial Class MainWindow
         RichTextBox1.Name = "RichTextBox1"
         RichTextBox1.Size = New Size(223, 158)
         RichTextBox1.TabIndex = 3
-        RichTextBox1.Text = ""' 
+        RichTextBox1.Text = ""
+        ' 
         ' Button2
         ' 
         Button2.Location = New Point(12, 226)

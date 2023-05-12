@@ -1,10 +1,87 @@
-﻿Imports System.Diagnostics.Eventing.Reader
+﻿Imports System.Configuration
+Imports System.Diagnostics.Eventing.Reader
 Imports System.IO
 Imports Newtonsoft.Json
 
 Public Class MainWindow
+    'スキルチャパレを書く為の設定クラス
+    Public Class WriteSettings
+        '一個の設定のクラス
+        Public Class SingleSetting
+            Public Template As String
+            Public IsHideOnEmpty As Boolean
+            Private EmptyValue As String
+
+            Public Sub New(Optional Template As String = "{0}", Optional IsHideOnEmpty As Boolean = True, Optional EmptyValue As String = "―")
+                Me.Template = Template
+                Me.IsHideOnEmpty = IsHideOnEmpty
+                Me.EmptyValue = EmptyValue
+            End Sub
+
+            Public Function IsEmptyValue(Value As String) As Boolean
+                Return Value = EmptyValue
+            End Function
+        End Class
+
+        Public SkillTemplate As String = "◆[タイミング]◆《[名称]》[レベル]：[分類][効果][判定][対象][射程][コスト][制限]"
+        Public Timing, Name, Level, Note As New SingleSetting
+        Public Category As New SingleSetting("【{0}】", EmptyValue:="")
+        Public Roll As New SingleSetting("/判定：{0}")
+        Public Target As New SingleSetting("/対象：{0}")
+        Public Range As New SingleSetting("/射程：{0}")
+        Public Cost As New SingleSetting("/コスト：{0}")
+        Public Reqd As New SingleSetting("/条件：{0}")
+
+        Public Function GetSettingByType(Type As String) As SingleSetting
+            Dim Result As SingleSetting
+
+            Select Case Type
+                Case "Category"
+                    Result = Category
+                Case "Name"
+                    Result = Name
+                Case "Lv"
+                    Result = Level
+                Case "Timing"
+                    Result = Timing
+                Case "Note"
+                    Result = Note
+                Case "Roll"
+                    Result = Roll
+                Case "Target"
+                    Result = Target
+                Case "Range"
+                    Result = Range
+                Case "Cost"
+                    Result = Cost
+                Case "Reqd"
+                    Result = Reqd
+                Case Else
+                    Result = New SingleSetting
+            End Select
+
+            Return Result
+        End Function
+    End Class
+
+    Private SettingFile As String = "writeSettings.json"
+    Private WriteSetting As New WriteSettings
+
     Private SkillList As Object
     Private Passiveflag As Boolean = True
+
+    'スキルチャパレを書く為の設定を読み込み
+    Public Sub Settings_Load()
+        If Not File.Exists(SettingFile) Then Return
+
+        Dim rawstr As String
+        Using sr As New StreamReader(SettingFile)
+            rawstr = sr.ReadToEnd
+            sr.Close()
+        End Using
+        WriteSetting = JsonConvert.DeserializeObject(Of WriteSettings)(rawstr)
+    End Sub
+
     Function Data_Load(loop_type, key_first, key_last_list, default_value, JSONObject)
         Dim List As New Dictionary(Of Object, Dictionary(Of String, String))
 
@@ -55,54 +132,47 @@ Public Class MainWindow
 
     Function Generate_ChatPallet(SkillData)
         Dim SkillChat As String
-        Dim Roll, Range, Target, Reqd, Category, Cost As String
-        If SkillData("Roll") = "―" Then
-            Roll = ""
-        Else
-            Roll = $"/判定：{SkillData("Roll")}"
-        End If
+        Dim Timing, Name, Level, Note, Roll, Range, Target, Reqd, Category, Cost As String
 
-        If SkillData("Range") = "―" Then
-            Range = ""
-        Else
-            Range = $"/射程：{SkillData("Range")}"
-        End If
+        Dim GetString = Function(Type As String)
+                            Dim Value As String = SkillData(Type)
+                            Dim Setting As WriteSettings.SingleSetting = WriteSetting.GetSettingByType(Type)
+                            If Setting.IsHideOnEmpty AndAlso Setting.IsEmptyValue(Value) Then
+                                Return ""
+                            Else
+                                Return String.Format(Setting.Template, Value)
+                            End If
+                        End Function
 
-        If SkillData("Target") = "―" Then
-            Target = ""
-        Else
-            Target = $"/対象：{SkillData("Target")}"
-        End If
+        Timing = GetString("Timing")
+        Name = GetString("Name")
+        Level = GetString("Lv")
+        Category = GetString("Category")
+        Note = GetString("Note")
+        Roll = GetString("Roll")
+        Target = GetString("Target")
+        Range = GetString("Range")
+        Cost = GetString("Cost")
+        Reqd = GetString("Reqd")
 
-        If SkillData("Reqd") = "―" Then
-            Reqd = ""
-        Else
-            Reqd = $"/条件：{SkillData("Reqd")}"
-        End If
+        SkillChat = WriteSetting.SkillTemplate
+        SkillChat = Replace(SkillChat, "[タイミング]", Timing)
+        SkillChat = Replace(SkillChat, "[名称]", Name)
+        SkillChat = Replace(SkillChat, "[レベル]", Level)
+        SkillChat = Replace(SkillChat, "[分類]", Category)
+        SkillChat = Replace(SkillChat, "[効果]", Note)
+        SkillChat = Replace(SkillChat, "[判定]", Roll)
+        SkillChat = Replace(SkillChat, "[対象]", Target)
+        SkillChat = Replace(SkillChat, "[射程]", Range)
+        SkillChat = Replace(SkillChat, "[コスト]", Cost)
+        SkillChat = Replace(SkillChat, "[制限]", Reqd)
 
-        If SkillData("Category") = "" Then
-            Category = ""
-        Else
-            Category = $"【{SkillData("Category")}】"
-        End If
-
-        If SkillData("Cost") = "―" Then
-            Cost = ""
-        Else
-            Cost = $"/コスト：{SkillData("Cost")}"
+        If Not WriteSetting.GetSettingByType("Cost").IsEmptyValue(SkillData("Cost")) Then
+            SkillChat &= $"{vbCrLf}:MP-{SkillData("Cost")} @{SkillData("Name")}"
         End If
 
         If SkillData("Lv") <> "1" Then
-            SkillChat = $"◆{SkillData("Timing")}◆《{SkillData("Name")}》{{{SkillData("Name")}}}：{Category}{SkillData("Note")}{Roll}{Target}{Range}{Cost}{Reqd}"
-        Else
-            SkillChat = $"◆{SkillData("Timing")}◆《{SkillData("Name")}》{SkillData("Lv")}：{Category}{SkillData("Note")}{Roll}{Target}{Range}{Cost}{Reqd}"
-        End If
-        If SkillData("Cost") <> "―" Then
-            SkillChat = SkillChat & $"{vbCrLf}:MP-{SkillData("Cost")} @{SkillData("Name")}"
-        End If
-        If SkillData("Lv") <> "1" Then
-            SkillChat = SkillChat & $"{vbCrLf}//{SkillData("Name")}={SkillData("Lv")}"
-
+            SkillChat &= $"{vbCrLf}//{SkillData("Name")}={SkillData("Lv")}"
         End If
         Return SkillChat
     End Function
@@ -132,34 +202,38 @@ Public Class MainWindow
 
             SkillList = Data_Load(loop_type, key_first, key_last_list, default_value, JsonObject)
 
-            For index = 1 To SkillList.Count
-                If index < SkillList.Count Then
-                    DataGridView1.Rows.Add()
-                End If
+            DataGridView1.Rows.Clear()
 
-                DataGridView1.Rows(index - 1).Cells(0).Value = True
-                DataGridView1.Rows(index - 1).Cells(1).Value = index
-                DataGridView1.Rows(index - 1).Cells(2).Value = SkillList(index)("Type")
-                DataGridView1.Rows(index - 1).Cells(3).Value = SkillList(index)("Category")
-                DataGridView1.Rows(index - 1).Cells(4).Value = SkillList(index)("Name")
-                DataGridView1.Rows(index - 1).Cells(5).Value = SkillList(index)("Lv")
-                DataGridView1.Rows(index - 1).Cells(6).Value = SkillList(index)("Timing")
-                DataGridView1.Rows(index - 1).Cells(7).Value = SkillList(index)("Note")
-                DataGridView1.Rows(index - 1).Cells(8).Value = SkillList(index)("Roll")
-                DataGridView1.Rows(index - 1).Cells(9).Value = SkillList(index)("Target")
-                DataGridView1.Rows(index - 1).Cells(10).Value = SkillList(index)("Range")
-                DataGridView1.Rows(index - 1).Cells(11).Value = SkillList(index)("Cost")
-                DataGridView1.Rows(index - 1).Cells(12).Value = SkillList(index)("Reqd")
+            Dim row_number As Integer
 
+            For index = 0 To SkillList.Count - 1
+                DataGridView1.Rows.Add()
+                row_number = index + 1
+
+                Dim Skill = SkillList(row_number)
+
+                DataGridView1.Rows(index).Cells(0).Value = True
+                DataGridView1.Rows(index).Cells(1).Value = row_number
+                DataGridView1.Rows(index).Cells(2).Value = Skill("Type")
+                DataGridView1.Rows(index).Cells(3).Value = Skill("Category")
+                DataGridView1.Rows(index).Cells(4).Value = Skill("Name")
+                DataGridView1.Rows(index).Cells(5).Value = Skill("Lv")
+                DataGridView1.Rows(index).Cells(6).Value = Skill("Timing")
+                DataGridView1.Rows(index).Cells(7).Value = Skill("Note")
+                DataGridView1.Rows(index).Cells(8).Value = Skill("Roll")
+                DataGridView1.Rows(index).Cells(9).Value = Skill("Target")
+                DataGridView1.Rows(index).Cells(10).Value = Skill("Range")
+                DataGridView1.Rows(index).Cells(11).Value = Skill("Cost")
+                DataGridView1.Rows(index).Cells(12).Value = Skill("Reqd")
             Next
-
-
-
         End If
 
     End Sub
 
     Private Sub MainWindow_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        ' 設定ファイルがあればロードする
+        Settings_Load()
+
         Dim column As New DataGridViewCheckBoxColumn
         DataGridView1.Columns.Add(column)
 
@@ -179,6 +253,10 @@ Public Class MainWindow
         DataGridView1.Columns(10).HeaderText = "射程"
         DataGridView1.Columns(11).HeaderText = "コスト"
         DataGridView1.Columns(12).HeaderText = "使用条件"
+
+        For index = 1 To 12
+            DataGridView1.Columns(index).ReadOnly = True
+        Next
 
     End Sub
 
