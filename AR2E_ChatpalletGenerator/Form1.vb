@@ -193,7 +193,18 @@ Public Class MainWindow
                 rawstr = sr.ReadToEnd
                 sr.Close()
             End Using
-            Dim JsonObject As Object = JsonConvert.DeserializeObject(Of Object)(rawstr)
+            Dim JsonObject As Object
+
+            Try
+                JsonObject = JsonConvert.DeserializeObject(Of Object)(rawstr)
+            Catch ex As Newtonsoft.Json.JsonReaderException
+                MessageBox.Show("読み込めませんでした。JSONファイルを指定して下さい。",
+                                "読み込みエラー",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error)
+                Exit Sub
+            End Try
+
 
             Dim loop_type As String = "Integer"
             Dim key_first As String = "skill"
