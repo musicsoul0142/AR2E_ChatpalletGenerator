@@ -203,6 +203,7 @@ Public Class MainWindow
             SkillList = Data_Load(loop_type, key_first, key_last_list, default_value, JsonObject)
 
             DataGridView1.Rows.Clear()
+            Passiveflag = True
 
             Dim row_number As Integer
 
