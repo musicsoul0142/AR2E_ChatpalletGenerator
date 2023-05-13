@@ -193,7 +193,25 @@ Public Class MainWindow
                 rawstr = sr.ReadToEnd
                 sr.Close()
             End Using
-            Dim JsonObject As Object = JsonConvert.DeserializeObject(Of Object)(rawstr)
+            Dim JsonObject As Object
+
+            Try
+                JsonObject = JsonConvert.DeserializeObject(Of Object)(rawstr)
+            Catch ex As Newtonsoft.Json.JsonReaderException
+                MessageBox.Show("読み込めませんでした。" & vbCrLf & "ゆとシート2 For AR2Eから出力されたJSONファイルを指定して下さい。",
+                                "読み込みエラー",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error)
+                Exit Sub
+            End Try
+
+            If IsNothing(JsonObject("skill1Type")) Then
+                MessageBox.Show("データの読み込みに失敗しました。" & vbCrLf & "ゆとシート2 For AR2Eから出力されたJSONファイルを指定して下さい。",
+                                "読み込みエラー",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error)
+                Exit Sub
+            End If
 
             Dim loop_type As String = "Integer"
             Dim key_first As String = "skill"
