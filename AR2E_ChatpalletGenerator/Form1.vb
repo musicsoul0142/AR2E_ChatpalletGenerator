@@ -172,7 +172,7 @@ Public Class MainWindow
             SkillChat &= $"{vbCrLf}:MP-{SkillData("Cost")} @{SkillData("Name")}"
         End If
 
-        If SkillData("Lv") <> "1" Then
+        If SkillData("Lv") > "1" Then
             SkillChat &= $"{vbCrLf}//{SkillData("Name")}={SkillData("Lv")}"
         End If
         Return SkillChat
