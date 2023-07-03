@@ -1,6 +1,7 @@
 ﻿Imports System.Configuration
 Imports System.Diagnostics.Eventing.Reader
 Imports System.IO
+Imports System.Text.RegularExpressions
 Imports Newtonsoft.Json
 
 Public Class MainWindow
@@ -144,7 +145,7 @@ Public Class MainWindow
                             End If
                         End Function
 
-        Timing = GetString("Timing")
+        Timing = (GetString("Timing").Replace("／メイキング", ""))
         Name = GetString("Name")
         Level = GetString("Lv")
         Category = GetString("Category")
