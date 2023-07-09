@@ -1,6 +1,7 @@
 ﻿Imports System.Configuration
 Imports System.Diagnostics.Eventing.Reader
 Imports System.IO
+Imports System.Text.RegularExpressions
 Imports Newtonsoft.Json
 
 Public Class MainWindow
@@ -144,7 +145,7 @@ Public Class MainWindow
                             End If
                         End Function
 
-        Timing = GetString("Timing")
+        Timing = (GetString("Timing").Replace("／メイキング", ""))
         Name = GetString("Name")
         Level = GetString("Lv")
         Category = GetString("Category")
@@ -171,7 +172,7 @@ Public Class MainWindow
             SkillChat &= $"{vbCrLf}:MP-{SkillData("Cost")} @{SkillData("Name")}"
         End If
 
-        If SkillData("Lv") <> "1" Then
+        If SkillData("Lv") > "1" Then
             SkillChat &= $"{vbCrLf}//{SkillData("Name")}={SkillData("Lv")}"
         End If
         Return SkillChat
@@ -315,9 +316,17 @@ Public Class MainWindow
 
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
         Try
+            If RichTextBox1.Text = "" Then
+                Exit Sub
+            End If
+            Clipboard.Clear()
+            System.Threading.Thread.Sleep(100)
             Clipboard.SetText(RichTextBox1.Text)
-        Catch ex As System.ArgumentNullException
-            Return
+            '        Catch ex As System.ArgumentNullException
+            '            Return
+        Catch ex As Exception
+            MsgBox("クリップボードへのコピーに失敗しました。再試行するか、対象テキストを選択して Ctrl+C を押してコピーしてください。", MsgBoxStyle.Exclamation, MainWindow.ActiveForm.Text)
+
         End Try
     End Sub
 End Class
